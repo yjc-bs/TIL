@@ -225,7 +225,7 @@ def index(request):
 -404에러, shortcut 스킵
 
 -뷰와 템플릿의 관계
-- 뷰 : 화면
+- 뷰 : 모델과 템플릿을 연결하는 역할(?)
 - 템플릿 : 꾸
 
 ---
@@ -261,3 +261,13 @@ def index(request):
 app_name = "polls" 로 지정하여
 
     <li><a href="{% url 'polls:detail' question.id %}">{{question.question_text}}</a></li>
+
+- 'polls:detail' -앱 네임 지정한 다음엔 이렇게 경로를 안바꿔주면 오류남 (NoReverseMatch at /polls/)
+
+## Tutorial04: 앱 작성하기
+
+#### 폼 form 
+
+`polls/detail.html` 투표 상세 생성 (detail 너무 많아서 헷갈림...)
+
+{% csrf_token %} 내부 url 
