@@ -164,3 +164,100 @@ def was_published_recently(self):
 
 ### Admin
     admin , yeonjoo.chi@beautyselection.co.kr , 1234qwer
+
+**`polls/admin.py`**
+
+
+`from .models import Question`로 모델을 가져오고(import) 
+
+`admin.site.register(Question)` 로 모델을 등록을 완료 해야 관리자 페이지에 노출됨
+
+---
+
+## Tutorial03: 뷰 생성
+
+뷰 Views : 
+- 화면을 만들어서 보여주는 역할
+- 사용자가 url 을 입력하면 해당 url에 연결된 View 함수를 실행함
+
+
+#우선 튜토리얼 따라서.. 2차에는 f"{}로 작성하기
+
+    path("<int:question_id>/vote/", views.vote, name="vote"),
+
+---
+**`polls/views.py`**
+
+```python
+def index(request):
+    latest_question_list = Question.objects.order_by("-pub_date")[:5]
+    output = ", ".join([q.question_text for q in latest_question_list]) #질문 내역이 a, b, c ... 이런식으로 보여짐
+    return HttpResponse(output)
+```
+
+- `-pub_date`(발행 날짜)를 기준으로 내림차순 정렬 (`pub_date` 오름차순 정렬)
+- `[:5]` 정렬된 데이터 중 앞에서부터 5개
+
+---
+
+### 탬플릿
+
+```python
+from django.http import HttpResponse
+from django.template import loader
+
+from .models import Question
+
+
+def index(request):
+    latest_question_list = Question.objects.order_by("-pub_date")[:5]
+    template = loader.get_template("polls/index.html")
+    context = {
+        "latest_question_list": latest_question_list,
+    }
+    return HttpResponse(template.render(context, request))
+```
+
+- `template = loader.get_template("#.html")` ##.html 템플릿으로 불러옴
+- `context`넘겨줄 데이터 내용
+
+
+-404에러, shortcut 스킵
+
+-뷰와 템플릿의 관계
+- 뷰 : 화면
+- 템플릿 : 꾸
+
+---
+하드코딩된 부분 변수로 바꾸기
+
+```polls/index.html```
+
+    <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+
+- 하드코딩
+- url 구조가 바뀌면 모든 html 파일 수정 필요. 유지보수 힘듬
+
+<br>
+
+    <li><a href="{% url 'detail' question.id %}">{{question.question_text}}</a></li>
+
+- {% url %} 방식
+- 'detail' - `polls/urls.py` 에서 `path("<int:question_id>/", views.detail, name="detail"),` 로 개발자가 지정함 (name 부분임)
+
+<br>
+
+#### Url 경로 바꿀때는 템플릿 (x)
+
+```polls/urls.py``` 여기서 수정
+
+    path("이런식으로/<int:question_id>/results/", views.results, name="results"),
+
+---
+
+#### namespace
+`polls/urls.py` 
+
+app_name = "polls" 로 지정하여
+
+    <li><a href="{% url 'polls:detail' question.id %}">{{question.question_text}}</a></li>
