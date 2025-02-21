@@ -221,8 +221,20 @@ def index(request):
 - `template = loader.get_template("#.html")` ##.html 템플릿으로 불러옴
 - `context`넘겨줄 데이터 내용
 
+---
+#### shortcuts / render()
 
--404에러, shortcut 스킵
+- HttpResponse()은 코드가 길어져 관리가 어려움
+- html 파일을 불러와서 사용하기 때문에 뷰 함수에서는 데이터만 준비하면 됨
+
+
+#### shortcuts / get_object_or_404, render
+    question = get_object_or_404(Question, pk=question_id)
+
+- question 변수에 다음 질문 객체를 넣음
+- Queestion 모델에서 `question_id` 에 해당하는 데이터를 가져오고, 만약 데이터가 없으면 404 에러 페이지가 자동으로 뜸
+- pk=id
+---
 
 -뷰와 템플릿의 관계
 - 뷰 : 모델과 템플릿을 연결하는 역할(?)
@@ -270,4 +282,61 @@ app_name = "polls" 로 지정하여
 
 `polls/detail.html` 투표 상세 생성 (detail 너무 많아서 헷갈림...)
 
-{% csrf_token %} 내부 url 
+{% csrf_token %} form 바로 아래 작성, 보안용
+
+`forloop.counter` for 태그 반복 횟수 
+
+---
+
+```python
+from django.db.models import F
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+
+from .models import Choice, Question
+
+
+# ...
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST["choice"])
+    except (KeyError, Choice.DoesNotExist):
+        return render(
+            request,
+            "polls/detail.html",
+            {
+                "question": question,
+                "error_message": "You didn't select a choice.",
+            },
+        )
+    else:
+        selected_choice.votes = F("votes") + 1
+        selected_choice.save()
+        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+```
+
+* F - 데이터베이스 연산을 위해 
+* selected_choice.votes = F("votes") + 1 - 데이터베이스 votes에 1을 증가시킴
+
+
+* HttpResponseRedirect - 사용자를 다른 url로 이동시킴
+* reverse - url 하드코딩 없이 url 이름으로 이동 (이해x???)
+
+* try ... except ... else
+
+`try`<br>
+    - name="choice" 인 값을 가져오게 함
+
+
+`except` 오류가 있다면<Br>
+    - `KeyError` 아무것도 선택하지 않음<Br>
+    - `Choice.DoesNotExist` 선택한 항목이 데이터베이스에 없음
+
+`else` 오류가 없다면<br>
+    - 데이버베이스에 1 증가, 데이터베이스에 저장, 결과 페이지로 이동
+
+---
+
+
