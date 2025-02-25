@@ -1,7 +1,7 @@
 # TIL
 
----
-
+<details>
+    <summary> ~2/21 </summary>
 ## Memo
 
 - `ls`
@@ -338,5 +338,246 @@ def vote(request, question_id):
     - 데이버베이스에 1 증가, 데이터베이스에 저장, 결과 페이지로 이동
 
 ---
+클래스형 뷰는 다음 사이클에서 진행
+---
 
 
+* mtv - 장고 기본 구조
+* mvc
+
+clinet<->server
+    request/ response
+
+
+<hr/>
+pep-8
+pep
+
+Web Framework : 어떤 사이트를 만들더라도 필요한 공통적인 작업을 미리해둔 소프트웨어 (jsp, flask 등)
+라이브러러
+
+<hr>
+form의 method
+https method
+
+</details>
+
+<details>
+<summary>2/24</summary>
+## Tutorial 2차
+
+### 설치
+
+    % django-admin startproject myproject .
+마지막에 .을 찍어야 myproject 해당 폴더에 생성됨 (안찍으면 my~폴더 안에 my~폴더가 또 생김)
+
+settings.py : 프로젝트에 운영하는 데 필요한 설정들
+urls.py : 사용자가 접속하는 패스에 따라서 그 요청(접속)을 어떻게, 누가 처리할 것인지 지정을 함(라우팅)
+manage.py : 프로젝트를 진행하는 데 필요한 기능, 유틸리티 파일
+
+    % manage.py runserver 8888
+
+http://localhost:8000/ 가 이미 사용 중일 경우 -> 대신해서 포트 번호 8888에서 실행
+
+project>app>view 흐름 이해
+- 어플리케이션은 app 단위에서 구현
+- app 안에 view 안에 함수들로 어플리케이션을 구체적으로 구현함
+
+- 사용자가 각 각의 경로로 접속하면, 그 경로를 project의 url.py 에 지정한 app의 url.py로 위임 -> 지정된 app의 url.py을 통해 그 app의 view - 안의 함수로 위임되어 작업 진행 -> db가 필요한 경우 app의 model을 통해서 사용 -> 최종적으로 클라이언트에게 응답 (html, xml, json 형태로)
+
+
+### 라우팅 Routing
+
+- 사용자가 접속한 경로를 어떻게 처리할 것인가
+- 장고에서는 project의 urls.py 가 가장 큰 틀의 라우팅을 하고 -> 앱 -> 특정 함수로 위임
+
+- 라우팅 실습
+
+`myproject/urls.py`
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('myapp.urls'))
+]
+```
+
+`myapp/urls.py`
+```python
+from django.urls import path
+from myapp import views
+
+urlpatterns = [
+    path('',views.index),
+    path('create/',views.create),
+    path('read/<id>/',views.read)
+]
+```
+**오류 상황**<br>
+패스 끝에 / 유무로 url이 제대로 불러와 지지 않을 수 있음
+`path('read/<id>',views.read)` 오류 발생
+`path('read/<id>/',views.read)` 정상 작동
+
+
+
+`myapp/views.py`
+```python
+from django.shortcuts import render, HttpResponse
+
+def index(request):
+    return HttpResponse('Welcome!')
+
+def create(request):
+    return HttpResponse('Create!')
+
+def read(request, id):
+    return HttpResponse('Read!'+id)
+```
+</details>
+
+
+## CRUD : 시스템의 기본 관리 기능 (create, read, update, delete)
+
+### Read ###
+
+```python
+from django.shortcuts import render, HttpResponse
+
+topics = [
+    {'id':1, 'title':'routing', 'body':'Routing is ..'},
+    {'id':2, 'title':'veiw', 'body':'View is ..'},
+    {'id':3, 'title':'model', 'body':'Model is ..'},
+]
+
+def HtmlTemplate(articleTag):
+    global topics
+    ol = ''
+    for topic in topics:
+        ol += f'<li><a href="/read/{topic["id"]}">{topic["title"]}</a></li>'
+    return f'''
+       <html>
+        <body>
+        <h1><a href="/">Django</a></h1>
+            <ol>
+                {ol}
+            </ol>
+        {articleTag}
+        </body>
+        </html>                 
+    '''
+
+def index(request):
+    article = '''
+    <h2>Welcome</h2>
+    hello, django
+    '''
+    return HttpResponse(HtmlTemplate(article))
+
+def read(request, id):
+    global topics
+    article = ''
+    for topic in topics:
+        if topic['id'] == int(id):
+            article = f'<h2>{topic["title"]}</h2>{topic["body"]}'
+    return HttpResponse(HtmlTemplate(article))
+
+def create(request):
+    return HttpResponse('Create!')
+```
+
+### Create
+
+```python
+...
+
+def create(request):
+    article = '''
+    <form action="/create/">
+        <p><input type="text" name="title" placeholder="title"></p>
+        <p><textarea name="body" placeholder="body"></textarea></p>
+        <p><input type="submit"></p>
+    </form>
+'''
+    return HttpResponse(HtmlTemplate(article))
+```
+
+-get 방식: 브라우저가 서버로부터 데이터를 읽어오는 방식
+
+/?title=ㅇㅇ&body=ㅇㅇㅇ : `` 변경하는 방식 <큰일남...
+
+-post 방식: 브라우저
+
+method="get" : 기본값, 
+method="post" :
+
+### request response object
+```python
+from django.shortcuts import render, HttpResponse, redirect
+from django.views.decorators.csrf import csrf_exempt
+
+nextID = 4
+topics = [
+    {'id':1, 'title':'routing', 'body':'Routing is ..'},
+    {'id':2, 'title':'veiw', 'body':'View is ..'},
+    {'id':3, 'title':'model', 'body':'Model is ..'},
+]
+
+def HtmlTemplate(articleTag):
+    global topics
+    ol = ''
+    for topic in topics:
+        ol += f'<li><a href="/read/{topic["id"]}">{topic["title"]}</a></li>'
+    return f'''
+       <html>
+        <body>
+        <h1><a href="/">Django</a></h1>
+            <ol>
+                {ol}
+            </ol>
+        {articleTag}
+        <ul>
+            <li><a href="/create/">create</a></li>
+        </ul>
+        </body>
+        </html>                 
+    '''
+
+def index(request):
+    article = '''
+    <h2>Welcome</h2>
+    hello, django
+    '''
+    return HttpResponse(HtmlTemplate(article))
+
+def read(request, id):
+    global topics
+    article = ''
+    for topic in topics:
+        if topic['id'] == int(id):
+            article = f'<h2>{topic["title"]}</h2>{topic["body"]}'
+    return HttpResponse(HtmlTemplate(article))
+
+@csrf_exempt
+def create(request):
+    global nextID
+    # print('request.method', request.method)
+    if request.method == "GET":
+        article = '''
+        <form action="/create/" method="post">
+            <p><input type="text" name="title" placeholder="title"></p>
+            <p><textarea name="body" placeholder="body"></textarea></p>
+            <p><input type="submit"></p>
+        </form>
+    '''
+        return HttpResponse(HtmlTemplate(article))
+    elif request.method == "POST":
+        title = request.POST['title']
+        body = request.POST['body']
+        newTopic = {'id':nextID, 'title':title, 'body':body}
+        topics.append(newTopic)
+        url = '/read/'+str(nextID)
+        nextID = nextID + 1
+        return redirect(url)
+```
