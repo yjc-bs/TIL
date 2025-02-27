@@ -437,7 +437,8 @@ def read(request, id):
 ```
 </details>
 
-
+<details>
+    <summary>2/25</summary>
 ## CRUD : 시스템의 기본 관리 기능 (create, read, update, delete)
 
 ### Read ###
@@ -581,3 +582,22 @@ def create(request):
         nextID = nextID + 1
         return redirect(url)
 ```
+
+### delete
+
+path('delete/',views.delete, name='delete') 패스 추가
+
+```python
+@csrf_exempt
+def delete(request):
+    global topics
+    if request.method == "POST":
+        id = request.POST['id']
+        newTopics = []
+        for topic in topics:
+            if topic['id'] != int(id):
+                newTopics.append(topic)
+        topics = newTopics
+        return redirect('/')
+```
+</details>
