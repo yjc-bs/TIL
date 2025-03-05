@@ -601,3 +601,90 @@ def delete(request):
         return redirect('/')
 ```
 </details>
+
+<details>
+        <summary>2/28</summary>
+
+### update
+
+    path('update/<id>/',views.update, name='update'), 패스 추가
+
+```python
+@csrf_exempt
+def update(request, id):
+    global topics
+    if request.method == "GET":
+        for topic in topics:
+            if topic['id'] == int(id):
+                selectedTopic = {
+                    'title':topic['title'],
+                    'body':topic['body']}
+        article = f'''
+        <form action="/update/{id}/" method="post">
+            <p><input type="text" name="title" placeholder="title" value={selectedTopic['title']}></p>
+            <p><textarea name="body" placeholder="body">{selectedTopic['body']}</textarea></p>
+            <p><input type="submit"></p>
+        </form>
+    '''
+        return HttpResponse(HtmlTemplate(article, id))
+    elif request.method =="POST":
+        title = request.POST['title']
+        body = request.POST['body']
+        for topic in topics:
+            if topic['id'] == int(id):
+                topic['title'] = title
+                topic['body'] = body
+        return redirect(f'/read/{id}')
+```
+
+update 너무 어려움...
+
+</details>
+
+<details>
+    <summary>3/4</summary>
+
+#### JAVASCRIPT
+### 변수 선언 var, let, const
+재선언 : 중복선언
+재할당 : 값 변경
+
+    var x = 1;
+    var x = 2; // 가능
+    x = 3;     // 가능
+
+    let y = 1;
+    let y = 2; // ❌ 에러 (재선언 불가)
+    y = 3;     // 가능
+
+    const z = 1;
+    const z = 2; // ❌ 에러 (재선언 불가)
+    z = 3;      // ❌ 에러 (재할당 불가)
+
+
+`var` 재선언 가능o, 재할당o <- 덮어쓰기 발생<br>
+`let` 변수 재선언 불가x, 재할당 가능o <br>
+`const` 변수 재선언 불가x, 재할당 불가x
+
+### 정규식
+
+1,000 단위마다 , 추가하는 함수
+
+```javascript
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+```
+
+```javascript
+"총 금액: 1000원, 할인: 200원".replace(/\d+/g, function(match) {
+    return Number(match).toLocaleString();
+});
+```
+
+toLocaleString() 메서드는 숫자나 날짜 객체를 문자열로 변환할 때 사용
+
+정규식 연습하기 : 
+https://kevinitcoding.tistory.com/entry/%EC%A0%95%EA%B7%9C-%ED%91%9C%ED%98%84%EC%8B%9D%EC%9D%B4%EB%9E%80
+
+</details>
