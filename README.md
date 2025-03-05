@@ -607,7 +607,7 @@ def delete(request):
 
 ### update
 
-    path('update/<id>/',views.update, name='update'), 패스 추가
+path('update/<id>/',views.update, name='update'), 패스 추가
 
 ```python
 @csrf_exempt
