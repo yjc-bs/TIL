@@ -692,7 +692,7 @@ https://kevinitcoding.tistory.com/entry/%EC%A0%95%EA%B7%9C-%ED%91%9C%ED%98%84%EC
 
 <details>
     <summary>3/5</summary>
-    
+
 ### web font
 
 * <link> 태그나  @import 구문에 다운로드 주소를 링크
@@ -705,9 +705,11 @@ B: 렌더링에 필요한 폰트 요청 > B: 렌더링 진행 - 폰트가 준비
 * FIOT : 렌더링 되는 동안 아무것도 보이지 않음
 * FOUT : 렌더링 되는 동안 기본 시스템 폰트라도 보이게함
 
+```html
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Tenor+Sans&display=swap" rel="stylesheet">
+```
 
 * `preconnect` : 브라우저가 사이트와의 연결을 에상하고 도메인에 필요한 사전 작업을 미리 진행하게 함 (단 리소스 사용 큼, 남용 금지)
 
