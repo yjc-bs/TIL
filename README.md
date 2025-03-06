@@ -714,3 +714,38 @@ B: 렌더링에 필요한 폰트 요청 > B: 렌더링 진행 - 폰트가 준비
 * `preconnect` : 브라우저가 사이트와의 연결을 에상하고 도메인에 필요한 사전 작업을 미리 진행하게 함 (단 리소스 사용 큼, 남용 금지)
 
 </details>
+
+<details>
+    <summary>3/6</summary>
+
+### form 의 method 속성
+ input의 내용 등을 서버로 전송하는 방법을 지정해 줌
+
+* 파라미터 : 클라이언트가 요청 시 서버의 특정 주소로 넘겨주는 데이터
+* query sting : https://..//##?파라미터 이름=파라미터 값
+
+* get : 주로 조회
+    * url에 폼 데이터를 추가하여 서버로 전달 (주소창에 전달)
+    * 브라우저 캐시 저장O
+    * query string 포함되어 전송됨, 길이 제한o
+    * 보안상 취약, 공개되어도 무방한 정보들에 적용 / 거의 모든 페이지에 적용
+
+* post : 주로 등록
+    * 폼 데이터를 별도로 첨부하여 서버로 전달 (body에 전달)
+    * 브라우저 캐시 저장x, 히스토리에 남지 않음
+    * query string 과는 별도로 전송됨, 길이 제한x
+    * 보안성 높음 / 로그인, 회원가입, 글 작성, 업로드 페이지 등
+
+### http 요청 method
+* http : request 요청 - response 응답
+
+* GET, POST, PUT, PATCH, DELETE / HEAD, CONNECT, OPTIONS, TRACE
+
+* 멱등성 : 동일한 요청을 1번 = 여러번 같은 효과(응답이 같을 때), 서버의 상태도 동일할 때
+    * GET은 멱등하고, POST는 멱등하지 x(응답이 다를 수 있음)
+https://developer.mozilla.org/ko/docs/Glossary/Idempotent
+
+* HTTP Request Message : Start line / Headers / Body 로 구성됨
+    * GET은 body가 없고, POST는 body가 존재
+
+</details>
