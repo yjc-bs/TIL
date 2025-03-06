@@ -748,4 +748,32 @@ https://developer.mozilla.org/ko/docs/Glossary/Idempotent
 * HTTP Request Message : Start line / Headers / Body 로 구성됨
     * GET은 body가 없고, POST는 body가 존재
 
+<hr>
+
+### PEP, PEP-8
+PEP : 파이썬 코딩 규약
+PEP-8 : Style guide for python code
+
+https://peps.python.org/
+https://peps.python.org/pep-0008/
+https://wikidocs.net/21733
+
+
+
+1. 들여쓰기
+    * 4칸 스페이스 
+    * 탭 사용x
+2. 최대 줄 길이 79자
+3. 연산자 앞에서 줄바꿈 
+4. 빈 줄 사용
+    * 최상위 함수와 클래스 정의 앞 뒤 2빈줄
+    * 클래스 내 메서드 정의 앞 뒤 1빈줄
+    * 그 외 관련된 함수들 끼리 그룹처럼 보이도록 빈줄 추가
+5. 파일 내 함수와 클래스 순서
+    * 모듈 docstring (모듈에 대한 설명)
+    * from __future__ import 문 (있는 경우)
+    * 모듈 import
+    * 전역 변수 선언
+    * 함수 정의
+    * 클래스 정의
 </details>
