@@ -787,11 +787,6 @@ https://wikidocs.net/21733
     $ source myenv/bin/activate  # 활성화
     $ pip install -r requirements.txt  # 패키지 재설치
 
-</details>
-
-<details>
-<summary>03/07</summary>
-
 ### Views
 * 웹 요청을 받아 처리하고 웹 응답을 반환하는 함수
 * 앱의 데이터와 사용자의 인터페이스를 연결하는 역할
