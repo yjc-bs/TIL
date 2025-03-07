@@ -843,13 +843,36 @@ Django의 내장된 제너릭 뷰
 * `CreateView`, `UpdateView`, `DeleteView` : 객체를 생성, 업데이트, 삭제하기 위한 폼을 제공
 
 ```python
-from django.views.generic import ListView
-from .models import Book
+from django.views import View
 
-class BookListView(ListView):
-    model = Book
+class PostCreateView(View):
+  def get(self, request):
+    page = Pageform();
+    return render(request, "index.html", {'form' : page})
+    
+  def post(self, request):
+    page = PageForm(request.POST)
+    if page.is_valid():
+      new_page = page.save()
+      return redirect('page-detail', page_id = new_page_id)
+      
+    return render(request, 'index.html', {'form' : page})
 ```
-* ListView 가 모든 작업을 수행 (와)
+이런 클래스 뷰가
+
+```python
+from django.views.generic import CreateView
+from django.urls import reverse
+
+class PostCreateView(CreateView):
+  model = Page
+  form_class = PageForm
+  template_name = 'index.html'
+
+  def get_success(self):
+    return reverse('details', kwargs={'page_id' : self.object_id})
+```
+CreateView로 간단하게 정리됨 (와)
 
 </hr>
 프레임워크 
