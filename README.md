@@ -777,3 +777,81 @@ https://wikidocs.net/21733
     * 함수 정의
     * 클래스 정의
 </details>
+
+<details>
+    <summary>3/7</summary>
+
+가상환경 관련 이슈
+
+    $ python3 -m venv myenv  # 새로 생성
+    $ source myenv/bin/activate  # 활성화
+    $ pip install -r requirements.txt  # 패키지 재설치
+
+</details>
+
+<details>
+<summary>03/07</summary>
+
+### Views
+* 웹 요청을 받아 처리하고 웹 응답을 반환하는 함수
+* 앱의 데이터와 사용자의 인터페이스를 연결하는 역할
+* 모델을 통해 앱의 db로 부터 데이터를 가져와 > 필요한 작업 수행 > 템플릿에 전달 > 렌더링
+* 앱의 로직을 처리함
+
+#### 함수 기반 뷰 FBV
+* 간단하고 직관적
+```python
+from django.http import HttpResponse
+def hello_world(request): //request는 매개변수
+    return HttpResponse("Hello, World!")
+```
+`request` 뷰 함수의 첫번째 매개변수 (항상!), HttpResponse의 객체<br>
+클라이언드카 웹사이트에 요청을 보내면 > Djangosms `request` 객체를 생성해 뷰 함수에 전달 <br>
+request 객체 안에는 요청과 관련된 메타 데이터가 포함됨
+
+request.method, request.GET, request.POST 이런 식으로 사용자의 요청정보를 쉽게 가져올 수 잇음
+
+#### 클래스 기반 뷰 CBV
+* 재사용 가능, 유지보수 확장 용이
+* 여러 HTTP 메서드(GET, POST, PUT, DELETE)를 함수 단위로 따로 구현할 수 있음
+```python
+from django.views import View
+from django.http import HttpResponse
+
+class HelloWorldView(View): //View 클래스를 상속받음
+    def get(self, request): 
+        return HttpResponse("Hello, World!")
+```
+
+`url.py` 에 등록해서 사용함 (라우팅)
+URLconf 
+```python
+from django.urls import path
+from .views import HelloWorldView  // 뷰 가져오기
+
+urlpatterns = [
+    path('hello/', HelloWorldView.as_view())  // 클래스 기반 뷰는 .as_view() 사용함
+]
+```
+
+Django의 내장된 제너릭 뷰
+
+* `TemplateView` : 주어진 템플릿을 렌더링
+* `RedirectView` : 다른 URL로 리디렉션
+* `ListView` : 객체 목록을 표시
+* `DetailView` : 단일 객체의 상세 뷰를 표시
+* `CreateView`, `UpdateView`, `DeleteView` : 객체를 생성, 업데이트, 삭제하기 위한 폼을 제공
+
+```python
+from django.views.generic import ListView
+from .models import Book
+
+class BookListView(ListView):
+    model = Book
+```
+* ListView 가 모든 작업을 수행 (와)
+
+</hr>
+프레임워크 
+
+</details>
