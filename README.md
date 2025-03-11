@@ -797,7 +797,7 @@ https://wikidocs.net/21733
 * 간단하고 직관적
 ```python
 from django.http import HttpResponse
-def hello_world(request): //request는 매개변수
+def hello_world(request): 
     return HttpResponse("Hello, World!")
 ```
 `request` 뷰 함수의 첫번째 매개변수 (항상!), HttpResponse의 객체<br>
@@ -870,6 +870,58 @@ class PostCreateView(CreateView):
 CreateView로 간단하게 정리됨 (와)
 
 </hr>
-프레임워크 
+</details>
 
+<details>
+<summary>3/10</summary>
+
+### 라이브러리
+
+* 개발에 흔히 사용되는 기능을 모아 놓은 코드 집합
+* 필요하면 호출하여 사용하는 도구
+* 특정 기능만 선택적으로 제공할 뿐 어플리케이션의 전체 구조에는 관여 x
+* jQuery, NumPy, react.js
+<Br>
+* 내가 어플리케이션 흐름을 주도하며 필요할때만 불러서 사용 (주도권: 개발자)
+
+### 프레임워크
+* 원하는 기능 구현에 집중하여 개발할 수 있도록 일정한 형태와 필요한 기능을 갖추고 있는 골격, 뼈대
+* 어플리케이션 개발 시 필수적인 코드, 알고리즘, db연동과 같은 기능을 위해 구조를 제공하고, 그 구조 위에서 사용자는 정해진 방식으로 코드를 작성해서 어플리케이션을 개발함
+* python : django, flask / java : spring framework / android / angular, vue.js
+<br>
+* 프레임워크가 어플리케이션 흐름을 주도하며 내가 코드를 수정함 (주도권:프레임워크)
+* 제어의 역전 IoC: 프레임워크에게 제어의 흐름을 넘겨서, 개발자가 작성하는 코드에서 신경쓸 부분을 줄임
+
+#### 장고 프레임워크
+* 개별 프로젝트에서 구현할 수 있는 방대한 클래스, 라이브러리 및 모듈 컬렉션 제공
+* 개발 프로세스의 속도를 높이고 실용적 디자인을 지원하는 데 목표
+* 프론트엔드를 염두해두고 만들어짐 (오?!)
+
+##### MTV, MVC
+
+`MVC` 모델, 뷰, 컨트롤러
+* Model : 데이터와 데이터를 처리하는 로직을 가지고 있음
+* View : 화면에 요청에 대한 결과물을 보여줌, 인터페이스 역할
+* 컨트롤러 : 모델과 뷰를 이어줌. 요청에 따라 적절한 로직을 가동하도록 알려주고 모델이 응답하면 그 응답을 뷰로 전달
+
+장고는
+`MTV` 모델, 템플릿, 뷰
+* Model : (=모델) DB에 저장되는 데이터, 클래스로 정의됨, 하나의 클래스=db table 임
+* Template : (=뷰) 유저에게 보여지는 화면, 뷰에서 로직을 처리하면 html 파일이 렌더링 됨
+* View : (=컨트롤러) 요청에 따라 적절한 로직을 수행하여 결과를 템플릿으로 렌더링하며 응답 (컨트롤러와 달리 백엔드에서 데이터만 주고 받을 수도 있음)
+
++ URLConf(URL 설계) : url.py <Br>
+    *  url 패턴을 정의하여 해당 url을 뷰와 매핑함
+    * path 함수로 url을 뷰와 매핑
+
+유저가 url로 요청을 보냄 > urlconf를 통해 view를 호출 > 호출된 view가 로직을 수행하여 모델에게 crud를 지시 > 모델은 db와 소통하여 crud를 수행 > 뷰가 지정된 템플릿을 렌더링 > 유저에게 반환
+
+</details>
+
+<details>
+<summary>3/11</summary>
+
+### 제너릭뷰로 crud 기능 구현
+
+https://docs.djangoproject.com/en/5.1/ref/class-based-views/generic-editing/
 </details>
