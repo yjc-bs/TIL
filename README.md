@@ -925,3 +925,72 @@ CreateView로 간단하게 정리됨 (와)
 
 https://docs.djangoproject.com/en/5.1/ref/class-based-views/generic-editing/
 </details>
+
+<details>
+<summary>3/14</summary>
+
+#### 가상환경 경로 확인시
+    which python 
+파이썬 명령은 그 프로젝트에서 사용하는 파이썬 가상환경/인터프리터를 가르키고 있어야 한다.
+
+#### 가상환경은 해당 장고 프로젝트 안에 있어야 관리가 쉬움 (몰랐어!)
+
+    cd ~/mydjango01  # mydjango01 폴더로 이동
+    python -m venv myenv  # 새로운 가상 환경 생성
+    source myenv/bin/activate  # 가상 환경 활성화
+
+#### 수퍼유저 계정 생성
+myuser / pw
+
+#### .gitignore 
+    .idea
+    myenv
+    db.sqlite3
+    __pycache__
+    /staticfiles
+    /mediafiles
+    .DS_Store
+
+https://github.com/yjc-bs/mydjango01
+
+</details>
+
+<details>
+
+<summary>3/17</summary>
+
+## css 이슈 : safari 에서의 word-break 이슈
+
+#### word-break:keep-all
+* 단어 단위로 줄바꿈
+* CJK 텍스트에서만 적용됨. (다른 단어는 normal 처리)
+
+        :lang(ko) {
+            word-break: keep-all;
+        }
+
+#### 해결 방법
+
+1. 텍스트가 콘텐츠 박스 끝에 도달했을 때 '-' 하이픈이 포함되어 있으면, word-break 속성 값과 상관 없이 하이픈에서 단어를 나누어 줄바꿈
+    * 하이픈 이외의 특수문자 기호는 어떻게 적용되는지 확인 필요
+
+
+2.  @supports (-webkit-hyphens: none) 는 Safari(iOS/macOS)에서만 작동함
+    * 윈도우는 keep-all 유지, mac에서는 break-all 로 적용
+
+            @supports (-webkit-hyphens: none) {
+                /* 해당 속성을 지원하는 브라우저에만 적용 */
+                .ec-base-product .description .name a {
+                    word-break: break-all;
+                }
+            }
+
+3. word-break: break-all 속성으로 통일
+    * 가독성보다 게시글마다 줄바꿈이 통일되어 있지 않은 것이 더 문제라면 그냥 break-all로 가는게 나을듯
+    * 네이버, 카카오에서 break-all 을 사용하는 이유가 있지 않을지
+
+
+https://developer.mozilla.org/ko/docs/Web/CSS/word-break
+https://codingeverybody.kr/css-word-break-%EC%86%8D%EC%84%B1-%EC%98%AC%EB%B0%94%EB%A5%B8-%EC%9D%B4%ED%95%B4%EC%99%80-%EC%82%AC%EC%9A%A9-%EB%B0%A9%EB%B2%95/
+https://stackoverflow.com/questions/20703235/safari-css-word-break-keep-all-is-not-working
+</details>
